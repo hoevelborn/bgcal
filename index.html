@@ -78,9 +78,9 @@
                 enddate = new Date(e.c_enddate);
                 
                 sdow = days[startdate.getDay()];
-                sdatum = ('0'+startdate.getDate()).slice(-2)+'.'+('0'+startdate.getMonth()).slice(-2)+'.'+startdate.getFullYear();
+                sdatum = ('0'+startdate.getDate()).slice(-2)+'.'+('0'+(startdate.getMonth()+1)).slice(-2)+'.'+startdate.getFullYear();
                 edow = days[enddate.getDay()];
-                edatum = ('0'+enddate.getDate()).slice(-2)+'.'+('0'+enddate.getMonth()).slice(-2)+'.'+enddate.getFullYear();
+                edatum = ('0'+enddate.getDate()).slice(-2)+'.'+('0'+(enddate.getMonth()+1)).slice(-2)+'.'+enddate.getFullYear();
 
                 datum = '<span>' + sdow + '</span>' + sdatum + ((sdatum === edatum)? '' : (' - ' + '<span>' + edow + '</span>' + edatum));
 

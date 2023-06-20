@@ -17,11 +17,89 @@
         *:after {
             box-sizing: inherit;
         }
+
+        body,
+        html {
+            margin: 0;
+            padding: 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 9px;
+            page-break-inside: auto
+        }
+
+        tr {
+            page-break-inside: avoid;
+            page-break-after: auto
+        }
+
+        td {
+            border: 1px solid black;
+            padding: 0 2px;
+        }
+
+        .date,
+        .time {
+            white-space: nowrap;
+        }
+
+        .date span {
+            width: 1.7em;
+            display: inline-block;
+        }
     </style>
 </head>
 
 <body>
-    <h1>Hallo Welt!</h1>
+    <table id="events"></table>
+    <script>
+        async function getevents() {
+            const mytable = document.getElementById('events');
+
+            const response = await fetch('https://166236.nrw.schule/logineo-news/events/next_365');
+            const events = await response.json();
+
+            const days = [
+                'So',
+                'Mo',
+                'Di',
+                'Mi',
+                'Do',
+                'Fr',
+                'Sa'
+            ]
+
+            for (var i = 0, len = events.length; i < len; i++) {
+                e = events[i];
+                startdate = new Date(e.c_startdate);
+                enddate = new Date(e.c_enddate);
+                
+                sdow = days[startdate.getDay()];
+                sdatum = ('0'+startdate.getDate()).slice(-2)+'.'+('0'+startdate.getMonth()).slice(-2)+'.'+startdate.getFullYear();
+                edow = days[enddate.getDay()];
+                edatum = ('0'+enddate.getDate()).slice(-2)+'.'+('0'+enddate.getMonth()).slice(-2)+'.'+enddate.getFullYear();
+
+                datum = '<span>' + sdow + '</span>' + sdatum + ((sdatum === edatum)? '' : (' - ' + '<span>' + edow + '</span>' + edatum));
+
+                stime = ('0' + startdate.getHours()).slice(-2) + ':' + ('0' + startdate.getMinutes()).slice(-2);
+                etime = ('0' + enddate.getHours()).slice(-2) + ':' + ('0' + enddate.getMinutes()).slice(-2);
+
+                zeit = ((stime === '00:00') ? '' : stime) + ((etime=== '23:59')?'':' - ' + etime);
+
+                console.log(datum + " --- " + zeit);
+
+                tr = document.createElement('tr');
+                tr.innerHTML = '<td class="date">'+datum+'</td><td class="time">'+zeit+'</td><td>'+e.c_title+'</td>';
+
+                mytable.append(tr);
+
+            }
+        }
+        getevents();
+    </script>
 </body>
 
 </html>

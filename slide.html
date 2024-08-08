@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>CodePen - A Pen by Tobias</title>
+  <link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/@splidejs/splide@latest/dist/css/splide.min.css'>
+  <style>
+    .splide__slide {
+      color: lightgrey;
+      font-family: system-ui;
+      font-size: 3rem;
+      font-weight: bold;
+      text-align: center;
+      padding: 2rem;
+    }
+    .is-active .splide__slide.is-active {
+      color: #444;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- partial:index.partial.html -->
+  <div id="outer" class="splide" role="group" aria-label="Splide Basic HTML Example">
+    <div class="splide__track">
+      <ul class="splide__list">
+        <li class="splide__slide">
+          <div id="inner01" class="splide" role="group" aria-label="Splide Basic HTML Example">
+            <div class="splide__track">
+              <ul class="splide__list">
+                <li class="splide__slide">Slide 01</li>
+                <li class="splide__slide">Slide 02</li>
+                <li class="splide__slide">Slide 03</li>
+              </ul>
+            </div>
+          </div>
+        </li>
+        <li class="splide__slide">
+          <div id="inner02" class="splide" role="group" aria-label="Splide Basic HTML Example">
+            <div class="splide__track">
+              <ul class="splide__list">
+                <li class="splide__slide">Slide 11</li>
+                <li class="splide__slide">Slide 12</li>
+                <li class="splide__slide">Slide 13</li>
+              </ul>
+            </div>
+          </div>
+        </li>
+        <li class="splide__slide">
+          <div id="inner03" class="splide" role="group" aria-label="Splide Basic HTML Example">
+            <div class="splide__track">
+              <ul class="splide__list">
+                <li class="splide__slide">Slide 21</li>
+                <li class="splide__slide">Slide 22</li>
+                <li class="splide__slide">Slide 23</li>
+              </ul>
+            </div>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+  <!-- partial -->
+  <script src='https://cdn.jsdelivr.net/npm/@splidejs/splide@latest/dist/js/splide.min.js'></script>
+  <script>
+    var outerSlider = new Splide('#outer', {
+      height: '14rem',
+      direction: 'ttb',
+      perPage: 1,
+      pagination: false,
+      gap: '1rem',
+    });
+
+    var innerSlider1 = new Splide('#inner01', {
+      height: '7rem',
+      perPage: 1,
+      gap: '1rem',
+      pagination: false,
+      padding: '33%',
+    });
+
+    var innerSlider2 = new Splide('#inner02', {
+      height: '7rem',
+      perPage: 1,
+      gap: '1rem',
+      pagination: false,
+      padding: '33%',
+    });
+
+    var innerSlider3 = new Splide('#inner03', {
+      height: '7rem',
+      perPage: 1,
+      gap: '1rem',
+      pagination: false,
+      padding: '33%',
+
+    });
+    outerSlider.mount();
+    innerSlider1.mount();
+    innerSlider2.mount();
+    innerSlider3.mount();
+  </script>
+</body>
+
+</html>

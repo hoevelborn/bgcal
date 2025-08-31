@@ -1,0 +1,15 @@
+div[data-subject="Französisch"]::after {
+    content: 'Fr. Jaquet';
+}
+
+div[data-subject="Französisch"] {
+    background-color: #ffeedd;
+}
+
+div[data-subject="Mathematik"]::after {
+    content: 'Hr. Harris';
+}
+
+div[data-subject="Mathematik"] {
+    background-color: #ddeeff;
+}

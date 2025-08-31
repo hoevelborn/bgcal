@@ -1,0 +1,106 @@
+#stundenplan {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    grid-template-rows: 1fr repeat(7, 4rem);
+    gap: .5rem;
+    font-family: system-ui;
+    text-align: center;
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+}
+
+body {
+    counter-reset: std-counter;
+}
+
+.dst {
+    grid-row-end: span 2;
+    background: red;
+}
+
+.std {
+    counter-increment: std-counter;
+    grid-column-start: 1;
+    text-align: left;
+    background-color: #eeeeee;
+}
+
+.std::before {
+    content: counter(std-counter);
+    margin-right: .5rem;
+    font-weight: bold;
+    font-size: 200%;
+}
+
+.mo {
+    grid-column-start: 2;
+}
+
+.di {
+    grid-column-start: 3;
+}
+
+.mi {
+    grid-column-start: 4;
+}
+
+.do {
+    grid-column-start: 5;
+}
+
+.fr {
+    grid-column-start: 6;
+}
+
+.wota {
+    grid-row-start: 1;
+    background-color: #eeeeee;
+    font-weight: bold;
+}
+
+.std1 {
+    grid-row-start: 2;
+}
+
+.std2 {
+    grid-row-start: 3;
+}
+
+.std3 {
+    grid-row-start: 4;
+}
+
+.std4 {
+    grid-row-start: 5;
+}
+
+.std5 {
+    grid-row-start: 6;
+}
+
+.std6 {
+    grid-row-start: 7;
+}
+
+.std7 {
+    grid-row-start: 8;
+}
+
+div[class^="std"]:not(.std) {
+    padding: .5rem;
+}
+
+div[class^="std"].dst:not(.std) {
+    padding: 2.5rem;
+}
+
+div[class^="std"]:not(.std)::after {
+    margin-inline-start: .5rem;
+    text-decoration: underline;
+}
+
+div[class^="std"]:not(.std)::before {
+    content: attr(data-subject);
+    font-weight: bold;
+    display: block;
+}

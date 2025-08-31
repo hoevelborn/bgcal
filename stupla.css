@@ -1,10 +1,9 @@
-
 body {
     font-family: system-ui;
 }
 
 h1 {
-    text-align:center;
+    text-align: center;
 }
 
 #stundenplan {
@@ -15,7 +14,7 @@ h1 {
     text-align: center;
     print-color-adjust: exact;
     -webkit-print-color-adjust: exact;
-    font-size:14px;
+    font-size: 14px;
 }
 
 body {
@@ -95,16 +94,15 @@ body {
     grid-row-start: 8;
 }
 
-div[class^="std"]:not(.std) {
-    padding-top: .5rem;
-}
-
-div[class^="std"].dst:not(.std) {
-    padding-top: 2.5rem;
+div[class^="std"] {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
 }
 
 div[class^="std"]:not(.std)::after {
-    margin-inline-start: .25rem;
+    white-space:nowrap;
     text-decoration: underline;
 }
 

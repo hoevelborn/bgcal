@@ -15,7 +15,7 @@ h1 {
     text-align: center;
     print-color-adjust: exact;
     -webkit-print-color-adjust: exact;
-    font-size:15px;
+    font-size:14px;
 }
 
 body {
@@ -104,7 +104,7 @@ div[class^="std"].dst:not(.std) {
 }
 
 div[class^="std"]:not(.std)::after {
-    margin-inline-start: .5rem;
+    margin-inline-start: .25rem;
     text-decoration: underline;
 }
 

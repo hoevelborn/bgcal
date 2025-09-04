@@ -23,7 +23,6 @@ body {
 
 .dst {
     grid-row-end: span 2;
-    background: red;
 }
 
 .std {

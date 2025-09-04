@@ -1,5 +1,5 @@
 div[data-subject="Deutsch"]::after {
-    content: 'Hr. Boyer';
+    content: 'Fr. Wienecke';
 }
 
 div[data-subject="Deutsch"] {
@@ -7,7 +7,7 @@ div[data-subject="Deutsch"] {
 }
 
 div[data-subject="Erdkunde"]::after {
-    content: 'Hr. Günther';
+    content: 'Fr. Kremer';
 }
 
 div[data-subject="Erdkunde"] {
@@ -15,7 +15,7 @@ div[data-subject="Erdkunde"] {
 }
 
 div[data-subject="Mathematik"]::after {
-    content: 'Fr. Steinhoff';
+    content: 'Hr. Harries';
 }
 
 div[data-subject="Mathematik"] {
@@ -23,7 +23,7 @@ div[data-subject="Mathematik"] {
 }
 
 div[data-subject="Latein"]::after {
-    content: 'Hr. Hank';
+    content: 'Hr. Bordin';
 }
 
 div[data-subject="Latein"] {
@@ -31,7 +31,7 @@ div[data-subject="Latein"] {
 }
 
 div[data-subject="Englisch"]::after {
-    content: 'Fr. Meller';
+    content: 'Fr. Wienecke';
 }
 
 div[data-subject="Englisch"] {
@@ -39,31 +39,39 @@ div[data-subject="Englisch"] {
 }
 
 div[data-subject="Chemie"]::after {
-    content: 'Fr. Piel';
+    content: 'Hr. Birnbaum';
 }
 
 div[data-subject="Chemie"] {
     background-color: #ffd86c;
 }
 
+div[data-subject="Biologie"]::after {
+    content: 'Fr. Köhler';
+}
+
+div[data-subject="Biologie"] {
+    background-color: #c5ff8f;
+}
+
 div[data-subject="Geschichte"]::after {
-    content: 'Hr. Muschellik';
+    content: 'Hr. Kirchhoff';
 }
 
 div[data-subject="Geschichte"] {
     background-color: #ae87e2;
 }
 
-div[data-subject="Religion"]::after {
-    content: 'Fr. Kusch';
+div[data-subject="Philosophie"]::after {
+    content: 'Hr. Braun';
 }
 
-div[data-subject="Religion"] {
+div[data-subject="Philosophie"] {
     background-color: #93a2d4;
 }
 
 div[data-subject="Sport"]::after {
-    content: 'Hr. Pfannenschmidt';
+    content: 'Hr. Harries';
 }
 
 div[data-subject="Sport"] {
@@ -79,9 +87,25 @@ div[data-subject="Kunst"] {
 }
 
 div[data-subject="Politik"]::after {
-    content: 'Fr. Steinhoff';
+    content: 'Hr. Fastnacht';
 }
 
 div[data-subject="Politik"] {
     background-color: #8f8f8f;
+}
+
+div[data-subject="Französisch"]::after {
+    content: 'Fr. Gaukstern';
+}
+
+div[data-subject="Französisch"] {
+    background-color: #f7a090;
+}
+
+div[data-subject="Physik"]::after {
+    content: 'Fr. Hesse';
+}
+
+div[data-subject="Physik"] {
+    background-color: #5b90f3;
 }

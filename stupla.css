@@ -109,4 +109,5 @@ div[class^="std"]:not(.std)::before {
     content: attr(data-subject);
     font-weight: bold;
     display: block;
+    font-size:150%;
 }

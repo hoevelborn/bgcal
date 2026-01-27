@@ -1,0 +1,772 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adaptive PDF Viewer with PDF.js</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        header {
+            background: #2c3e50;
+            color: white;
+            padding: 20px 30px;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 24px;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            color: #ecf0f1;
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .controls {
+            background: #f8f9fa;
+            padding: 20px;
+            border-bottom: 1px solid #e9ecef;
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .control-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .control-group label {
+            font-weight: 600;
+            color: #495057;
+            font-size: 14px;
+        }
+
+        select, button, input {
+            padding: 8px 16px;
+            border: 1px solid #ced4da;
+            border-radius: 6px;
+            font-size: 14px;
+            background: white;
+        }
+
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: background 0.2s;
+            font-weight: 500;
+        }
+
+        button:hover {
+            background: #0056b3;
+        }
+
+        #pageInput {
+            width: 80px;
+            text-align: center;
+        }
+
+        .progress-container {
+            margin-left: auto;
+            padding: 10px 20px;
+            background: #e3f2fd;
+            border-radius: 6px;
+            min-width: 200px;
+        }
+
+        .progress-bar {
+            height: 8px;
+            background: #bbdefb;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 5px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #2196f3, #21cbf3);
+            width: 0%;
+            transition: width 0.3s;
+        }
+
+        .progress-text {
+            font-size: 12px;
+            color: #1565c0;
+            font-weight: 500;
+            text-align: center;
+        }
+
+        .viewer-container {
+            display: flex;
+            min-height: 600px;
+            position: relative;
+        }
+
+        #pdfViewer {
+            flex: 1;
+            padding: 30px;
+            overflow-y: auto;
+            background: #f5f5f5;
+            scroll-behavior: smooth;
+        }
+
+        .sidebar {
+            width: 300px;
+            background: white;
+            border-left: 1px solid #e9ecef;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .sidebar h3 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #007bff;
+        }
+
+        .loading-info {
+            background: #fff8e1;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 4px solid #ffc107;
+        }
+
+        .loading-info h4 {
+            color: #ff9800;
+            margin-bottom: 10px;
+        }
+
+        .stat {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 13px;
+        }
+
+        .stat .label {
+            color: #666;
+        }
+
+        .stat .value {
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        .thumbnail-container {
+            margin-top: 20px;
+        }
+
+        .thumbnail {
+            margin-bottom: 10px;
+            cursor: pointer;
+            border: 2px solid transparent;
+            border-radius: 4px;
+            padding: 5px;
+            transition: all 0.2s;
+        }
+
+        .thumbnail:hover {
+            border-color: #007bff;
+            background: #f0f7ff;
+        }
+
+        .thumbnail.active {
+            border-color: #007bff;
+            background: #e3f2fd;
+        }
+
+        .thumbnail canvas {
+            width: 100%;
+            height: auto;
+            display: block;
+            border-radius: 2px;
+        }
+
+        .thumbnail .page-number {
+            text-align: center;
+            font-size: 12px;
+            color: #666;
+            margin-top: 4px;
+        }
+
+        .page-container {
+            position: relative;
+            margin-bottom: 30px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            overflow: hidden;
+            border: 1px solid #e0e0e0;
+        }
+
+        .page-header {
+            background: #f5f5f5;
+            padding: 10px 20px;
+            border-bottom: 1px solid #e0e0e0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .page-number {
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        .page-status {
+            font-size: 12px;
+            color: #666;
+            padding: 2px 8px;
+            background: #e8f5e9;
+            border-radius: 10px;
+        }
+
+        .page-status.loading {
+            background: #fff3e0;
+            color: #f57c00;
+        }
+
+        .page-canvas {
+            display: block;
+            margin: 0 auto;
+            max-width: 100%;
+            height: auto;
+        }
+
+        .loading-placeholder {
+            height: 400px;
+            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+            background-size: 200% 100%;
+            animation: loading 1.5s infinite;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #999;
+        }
+
+        @keyframes loading {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+
+        .notification {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 15px 25px;
+            background: #4caf50;
+            color: white;
+            border-radius: 6px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.3s;
+            z-index: 1000;
+        }
+
+        .notification.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .notification.error {
+            background: #f44336;
+        }
+
+        @media (max-width: 768px) {
+            .viewer-container {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                border-left: none;
+                border-top: 1px solid #e9ecef;
+            }
+            
+            .controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .progress-container {
+                margin-left: 0;
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📚 Adaptive PDF Viewer</h1>
+            <p class="subtitle">Loads only visible pages using PDF.js with HTTP Range Requests</p>
+        </header>
+
+        <div class="controls">
+            <div class="control-group">
+                <label for="pdfSelect">Sample PDF:</label>
+                <select id="pdfSelect">
+                    <option value="OGP_2026_LR_lin.pdf">Small PDF (1 Page)</option>
+                    <option value="vdma_795.pdf">Dummy PDF (2 Pages)</option>
+                    <option value="https://www.w3.org/WAI/demos/bad/after/home.pdf">W3C Example (5 Pages)</option>
+                    <option value="https://www.ets.org/Media/Research/pdf/Research-Notes-2018-sample.pdf">Research PDF (9 Pages)</option>
+                </select>
+            </div>
+
+            <button id="loadPdf">Load PDF</button>
+            
+            <div class="control-group">
+                <button id="prevPage">← Prev</button>
+                <input type="number" id="pageInput" min="1" value="1">
+                <span id="totalPages">/ 1</span>
+                <button id="nextPage">Next →</button>
+            </div>
+
+            <div class="control-group">
+                <label for="zoomSelect">Zoom:</label>
+                <select id="zoomSelect">
+                    <option value="0.5">50%</option>
+                    <option value="0.75">75%</option>
+                    <option value="1" selected>100%</option>
+                    <option value="1.25">125%</option>
+                    <option value="1.5">150%</option>
+                    <option value="2">200%</option>
+                </select>
+            </div>
+
+            <div class="progress-container">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+                <div class="progress-text">
+                    <span id="loadedPages">0</span> of <span id="totalPagesText">0</span> pages loaded
+                </div>
+            </div>
+        </div>
+
+        <div class="viewer-container">
+            <div id="pdfViewer"></div>
+            
+            <div class="sidebar">
+                <div class="loading-info">
+                    <h4>📊 Adaptive Loading Stats</h4>
+                    <div class="stat">
+                        <span class="label">Pages Loaded:</span>
+                        <span class="value" id="statsLoaded">0</span>
+                    </div>
+                    <div class="stat">
+                        <span class="label">Visible Pages:</span>
+                        <span class="value" id="statsVisible">0</span>
+                    </div>
+                    <div class="stat">
+                        <span class="label">Zoom Level:</span>
+                        <span class="value" id="statsZoom">100%</span>
+                    </div>
+                    <div class="stat">
+                        <span class="label">Loading Mode:</span>
+                        <span class="value" id="statsMode">Lazy</span>
+                    </div>
+                </div>
+
+                <h3>📄 Page Thumbnails</h3>
+                <div id="thumbnailContainer" class="thumbnail-container">
+                    <!-- Thumbnails will be inserted here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="notification" class="notification"></div>
+
+    <!-- PDF.js Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.6.347/pdf.min.js"></script>
+    <script>
+        // Configure PDF.js worker
+        pdfjsLib.GlobalWorkerOptions.workerSrc ='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.6.347/pdf.worker.min.js';
+
+        class AdaptivePDFViewer {
+            constructor() {
+                this.pdfDoc = null;
+                this.currentPage = 1;
+                this.totalPages = 0;
+                this.zoomLevel = 1;
+                this.loadedPages = new Set();
+                this.visiblePages = new Set();
+                this.isLoading = false;
+                this.pagesContainer = document.getElementById('pdfViewer');
+                this.thumbnailContainer = document.getElementById('thumbnailContainer');
+                
+                this.initEventListeners();
+                this.initIntersectionObserver();
+                this.showNotification('Select a PDF and click "Load PDF" to start', false);
+            }
+
+            initEventListeners() {
+                document.getElementById('loadPdf').addEventListener('click', () => this.loadPDF());
+                document.getElementById('prevPage').addEventListener('click', () => this.prevPage());
+                document.getElementById('nextPage').addEventListener('click', () => this.nextPage());
+                document.getElementById('pageInput').addEventListener('change', (e) => this.goToPage(parseInt(e.target.value)));
+                document.getElementById('zoomSelect').addEventListener('change', (e) => this.setZoom(parseFloat(e.target.value)));
+                
+                // Keyboard navigation
+                document.addEventListener('keydown', (e) => {
+                    if (e.key === 'ArrowLeft') this.prevPage();
+                    if (e.key === 'ArrowRight') this.nextPage();
+                });
+            }
+
+            async loadPDF() {
+                const pdfUrl = document.getElementById('pdfSelect').value;
+                
+                if (!pdfUrl) {
+                    this.showNotification('Please select a PDF file', true);
+                    return;
+                }
+
+                this.isLoading = true;
+                this.showNotification('Loading PDF metadata...', false);
+                
+                try {
+                    // Clear previous content
+                    this.pagesContainer.innerHTML = '';
+                    this.thumbnailContainer.innerHTML = '';
+                    this.loadedPages.clear();
+                    this.visiblePages.clear();
+                    
+                    // Load PDF with streaming enabled
+                    const loadingTask = pdfjsLib.getDocument({
+                        url: pdfUrl,
+                        disableRange: false,  // Enable range requests
+                        disableStream: false, // Enable streaming
+						disableAutoFetch: false, 
+                        rangeChunkSize: 65536, // 64KB chunks
+						
+						cMapUrl: 'https://cdn.jsdelivr.net/npm/pdfjs-dist@latest/cmaps/',
+						cMapPacked: true,
+                    });
+
+                    // Track loading progress
+                    loadingTask.onProgress = (progress) => {
+                        const percent = Math.round((progress.loaded / progress.total) * 100);
+                        document.getElementById('progressFill').style.width = `${percent}%`;
+                    };
+
+                    this.pdfDoc = await loadingTask.promise;
+                    this.totalPages = this.pdfDoc.numPages;
+                    
+                    // Update UI
+                    document.getElementById('totalPages').textContent = ` / ${this.totalPages}`;
+                    document.getElementById('totalPagesText').textContent = this.totalPages;
+                    document.getElementById('pageInput').max = this.totalPages;
+                    
+                    this.showNotification(`PDF loaded: ${this.totalPages} pages`, false);
+                    this.updateStats();
+                    
+                    // Create placeholders for all pages
+                    this.createPagePlaceholders();
+                    
+                    // Create thumbnail placeholders
+                    this.createThumbnailPlaceholders();
+                    
+                    // Load first page immediately
+                    await this.loadPage(1);
+                    
+                } catch (error) {
+                    console.error('Error loading PDF:', error);
+                    this.showNotification(`Error loading PDF: ${error.message}`, true);
+                } finally {
+                    this.isLoading = false;
+                }
+            }
+
+            createPagePlaceholders() {
+                for (let i = 1; i <= this.totalPages; i++) {
+                    const pageContainer = document.createElement('div');
+                    pageContainer.className = 'page-container';
+                    pageContainer.id = `page-${i}`;
+                    pageContainer.dataset.page = i;
+                    
+                    const pageHeader = document.createElement('div');
+                    pageHeader.className = 'page-header';
+                    
+                    const pageNumber = document.createElement('div');
+                    pageNumber.className = 'page-number';
+                    pageNumber.textContent = `Page ${i}`;
+                    
+                    const pageStatus = document.createElement('div');
+                    pageStatus.className = 'page-status loading';
+                    pageStatus.id = `status-${i}`;
+                    pageStatus.textContent = 'Not loaded';
+                    
+                    const placeholder = document.createElement('div');
+                    placeholder.className = 'loading-placeholder';
+                    placeholder.id = `placeholder-${i}`;
+                    placeholder.textContent = 'Click to load page';
+                    
+                    // Click to load page manually
+                    placeholder.addEventListener('click', () => this.loadPage(i));
+                    
+                    pageHeader.appendChild(pageNumber);
+                    pageHeader.appendChild(pageStatus);
+                    pageContainer.appendChild(pageHeader);
+                    pageContainer.appendChild(placeholder);
+                    
+                    this.pagesContainer.appendChild(pageContainer);
+                }
+            }
+
+            createThumbnailPlaceholders() {
+                for (let i = 1; i <= this.totalPages; i++) {
+                    const thumbnail = document.createElement('div');
+                    thumbnail.className = 'thumbnail';
+                    thumbnail.id = `thumb-${i}`;
+                    thumbnail.dataset.page = i;
+                    
+                    const canvas = document.createElement('canvas');
+                    const placeholder = document.createElement('div');
+                    placeholder.className = 'loading-placeholder';
+                    placeholder.style.height = '100px';
+                    
+                    const pageNumber = document.createElement('div');
+                    pageNumber.className = 'page-number';
+                    pageNumber.textContent = `Page ${i}`;
+                    
+                    thumbnail.appendChild(placeholder);
+                    thumbnail.appendChild(pageNumber);
+                    
+                    thumbnail.addEventListener('click', () => {
+                        this.goToPage(i);
+                        this.scrollToPage(i);
+                    });
+                    
+                    this.thumbnailContainer.appendChild(thumbnail);
+                }
+            }
+
+            async loadPage(pageNum) {
+                if (!this.pdfDoc || pageNum < 1 || pageNum > this.totalPages) return;
+                if (this.loadedPages.has(pageNum)) return;
+                
+                this.loadedPages.add(pageNum);
+                const pageContainer = document.getElementById(`page-${pageNum}`);
+                const statusElement = document.getElementById(`status-${pageNum}`);
+                const placeholder = document.getElementById(`placeholder-${pageNum}`);
+                
+                try {
+                    statusElement.textContent = 'Loading...';
+                    statusElement.style.color = '#ff9800';
+                    
+                    // Load the specific page
+                    const page = await this.pdfDoc.getPage(pageNum);
+                    
+                    // Calculate viewport
+                    const viewport = page.getViewport({ scale: this.zoomLevel });
+                    
+                    // Create canvas
+                    const canvas = document.createElement('canvas');
+                    canvas.className = 'page-canvas';
+                    canvas.height = viewport.height;
+                    canvas.width = viewport.width;
+                    
+                    // Replace placeholder with canvas
+                    placeholder.replaceWith(canvas);
+                    
+                    // Render page
+                    const renderContext = {
+                        canvasContext: canvas.getContext('2d'),
+                        viewport: viewport
+                    };
+                    
+                    await page.render(renderContext).promise;
+                    
+                    statusElement.textContent = '✓ Loaded';
+                    statusElement.className = 'page-status';
+                    statusElement.style.color = '#4caf50';
+                    
+                    // Create thumbnail
+                    await this.createThumbnail(page, pageNum);
+                    
+                    // Update stats
+                    this.updateStats();
+                    
+                } catch (error) {
+                    console.error(`Error loading page ${pageNum}:`, error);
+                    statusElement.textContent = '✗ Error';
+                    statusElement.style.color = '#f44336';
+                    placeholder.textContent = 'Click to retry';
+                }
+            }
+
+            async createThumbnail(page, pageNum) {
+                const thumbnail = document.getElementById(`thumb-${pageNum}`);
+                if (!thumbnail) return;
+                
+                // Clear placeholder
+                thumbnail.innerHTML = '';
+                
+                const thumbnailViewport = page.getViewport({ scale: 0.15 });
+                const canvas = document.createElement('canvas');
+                canvas.height = thumbnailViewport.height;
+                canvas.width = thumbnailViewport.width;
+                
+                const renderContext = {
+                    canvasContext: canvas.getContext('2d'),
+                    viewport: thumbnailViewport
+                };
+                
+                await page.render(renderContext).promise;
+                
+                const pageNumber = document.createElement('div');
+                pageNumber.className = 'page-number';
+                pageNumber.textContent = `Page ${pageNum}`;
+                
+                thumbnail.appendChild(canvas);
+                thumbnail.appendChild(pageNumber);
+                
+                // Add active class if this is current page
+                if (pageNum === this.currentPage) {
+                    thumbnail.classList.add('active');
+                }
+            }
+
+            initIntersectionObserver() {
+                // Observe which pages are visible in viewport
+                this.observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        const pageNum = parseInt(entry.target.dataset.page);
+                        
+                        if (entry.isIntersecting) {
+                            this.visiblePages.add(pageNum);
+                            this.loadPage(pageNum); // Load page when it becomes visible
+                        } else {
+                            this.visiblePages.delete(pageNum);
+                        }
+                        
+                        this.updateStats();
+                    });
+                }, {
+                    root: this.pagesContainer,
+                    threshold: 0.1
+                });
+                
+                // Observe all page containers
+                setTimeout(() => {
+                    document.querySelectorAll('.page-container').forEach(container => {
+                        this.observer.observe(container);
+                    });
+                }, 100);
+            }
+
+            updateStats() {
+                document.getElementById('statsLoaded').textContent = this.loadedPages.size;
+                document.getElementById('statsVisible').textContent = this.visiblePages.size;
+                document.getElementById('statsZoom').textContent = `${Math.round(this.zoomLevel * 100)}%`;
+                document.getElementById('loadedPages').textContent = this.loadedPages.size;
+                
+                // Determine loading mode
+                const mode = this.loadedPages.size < this.totalPages ? 'Lazy Loading' : 'Fully Loaded';
+                document.getElementById('statsMode').textContent = mode;
+            }
+
+            goToPage(pageNum) {
+                if (pageNum < 1 || pageNum > this.totalPages) return;
+                
+                this.currentPage = pageNum;
+                document.getElementById('pageInput').value = pageNum;
+                
+                // Update active thumbnail
+                document.querySelectorAll('.thumbnail').forEach(thumb => {
+                    thumb.classList.remove('active');
+                });
+                const activeThumb = document.getElementById(`thumb-${pageNum}`);
+                if (activeThumb) {
+                    activeThumb.classList.add('active');
+                }
+                
+                this.loadPage(pageNum);
+            }
+
+            scrollToPage(pageNum) {
+                const pageElement = document.getElementById(`page-${pageNum}`);
+                if (pageElement) {
+                    pageElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            }
+
+            prevPage() {
+                if (this.currentPage > 1) {
+                    this.goToPage(this.currentPage - 1);
+                    this.scrollToPage(this.currentPage);
+                }
+            }
+
+            nextPage() {
+                if (this.currentPage < this.totalPages) {
+                    this.goToPage(this.currentPage + 1);
+                    this.scrollToPage(this.currentPage);
+                }
+            }
+
+            setZoom(zoom) {
+                this.zoomLevel = zoom;
+                document.getElementById('statsZoom').textContent = `${Math.round(zoom * 100)}%`;
+                
+                // Reload all loaded pages with new zoom
+                this.loadedPages.forEach(pageNum => {
+                    const pageContainer = document.getElementById(`page-${pageNum}`);
+                    const canvas = pageContainer.querySelector('canvas');
+                    if (canvas) {
+                        this.loadPage(pageNum); // This will re-render with new zoom
+                    }
+                });
+            }
+
+            showNotification(message, isError = false) {
+                const notification = document.getElementById('notification');
+                notification.textContent = message;
+                notification.className = `notification ${isError ? 'error' : ''} show`;
+                
+                setTimeout(() => {
+                    notification.classList.remove('show');
+                }, 3000);
+            }
+        }
+
+        // Initialize the viewer when page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            window.pdfViewer = new AdaptivePDFViewer();
+        });
+    </script>
+</body>
+</html>

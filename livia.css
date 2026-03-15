@@ -15,7 +15,7 @@ div[data-subject="Erdkunde"] {
 }
 
 div[data-subject="Mathematik"]::after {
-    content: 'Fr. Steinhoff';
+    content: 'Fr. Kaibel';
 }
 
 div[data-subject="Mathematik"] {
@@ -63,7 +63,7 @@ div[data-subject="Religion"] {
 }
 
 div[data-subject="Sport"]::after {
-    content: 'Hr. Pfannenschmidt';
+    content: 'Fr. Blömer';
 }
 
 div[data-subject="Sport"] {
@@ -79,9 +79,16 @@ div[data-subject="Kunst"] {
 }
 
 div[data-subject="Politik"]::after {
-    content: 'Fr. Steinhoff';
+    content: 'Fr. Blömer';
 }
 
 div[data-subject="Politik"] {
     background-color: #8f8f8f;
+}
+
+div[data-subject="Musik"]{
+    background-color: #f35bb4;
+    &::after {
+    content: 'Fr. Herkenhöhner';
+    }
 }

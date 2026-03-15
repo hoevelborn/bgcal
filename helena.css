@@ -109,3 +109,10 @@ div[data-subject="Physik"]::after {
 div[data-subject="Physik"] {
     background-color: #5b90f3;
 }
+
+div[data-subject="Musik"]{
+    background-color: #f35bb4;
+    &::after {
+    content: 'Fr. Wirtz';
+    }
+}

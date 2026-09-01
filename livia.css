@@ -1,5 +1,5 @@
 div[data-subject="Deutsch"]::after {
-    content: 'Hr. Boyer';
+    content: 'Fr. Blömer';
 }
 
 div[data-subject="Deutsch"] {
@@ -15,7 +15,7 @@ div[data-subject="Erdkunde"] {
 }
 
 div[data-subject="Mathematik"]::after {
-    content: 'Fr. Kaibel';
+    content: 'Hr. Stein';
 }
 
 div[data-subject="Mathematik"] {
@@ -23,7 +23,7 @@ div[data-subject="Mathematik"] {
 }
 
 div[data-subject="Latein"]::after {
-    content: 'Hr. Hank';
+    content: 'Hr. Kirchhoff';
 }
 
 div[data-subject="Latein"] {
@@ -47,7 +47,7 @@ div[data-subject="Chemie"] {
 }
 
 div[data-subject="Geschichte"]::after {
-    content: 'Hr. Muschellik';
+    content: 'Hr. Kirchhoff';
 }
 
 div[data-subject="Geschichte"] {

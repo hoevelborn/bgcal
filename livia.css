@@ -71,7 +71,7 @@ div[data-subject="Religion"] {
 }
 
 div[data-subject="Sport"]::after {
-    content: 'Fr. Blömer';
+    content: 'Hr. Zwirner';
 }
 
 div[data-subject="Sport"] {

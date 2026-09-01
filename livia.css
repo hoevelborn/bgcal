@@ -38,10 +38,6 @@ div[data-subject="Englisch"] {
     background-color: #ffa970;
 }
 
-div[data-subject="Chemie"]::after {
-    content: 'Fr. Piel';
-}
-
 div[data-subject="Physik"] {
     background-color: #b68809;
 }
@@ -50,8 +46,24 @@ div[data-subject="Physik"]::after {
     content: 'Hr. Picard';
 }
 
+div[data-subject="Chemie"]::after {
+    content: 'Fr. Piel';
+}
+
 div[data-subject="Chemie"] {
     background-color: #ffd86c;
+}
+
+div[data-subject="Physik"]::after {
+    content: 'Hr. Picard';
+}
+
+div[data-subject="Biologie"]::after {
+    content: 'Fr. Ueberlein';
+}
+
+div[data-subject="Biologie"] {
+    background-color: #59e683;
 }
 
 div[data-subject="Geschichte"]::after {

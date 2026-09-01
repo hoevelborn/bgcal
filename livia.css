@@ -42,6 +42,14 @@ div[data-subject="Chemie"]::after {
     content: 'Fr. Piel';
 }
 
+div[data-subject="Physik"] {
+    background-color: #b68809;
+}
+
+div[data-subject="Physik"]::after {
+    content: 'Hr. Picard';
+}
+
 div[data-subject="Chemie"] {
     background-color: #ffd86c;
 }

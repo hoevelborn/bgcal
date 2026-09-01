@@ -87,7 +87,7 @@ div[data-subject="Kunst"] {
 }
 
 div[data-subject="Politik"]::after {
-    content: 'Fr. Blömer';
+    content: 'Fr. Steglich';
 }
 
 div[data-subject="Politik"] {

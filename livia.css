@@ -31,7 +31,7 @@ div[data-subject="Latein"] {
 }
 
 div[data-subject="Englisch"]::after {
-    content: 'Fr. Meller';
+    content: 'Fr. Steglich';
 }
 
 div[data-subject="Englisch"] {
